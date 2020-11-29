@@ -13,7 +13,7 @@
 1 <= k(i) <= 10**8
 */
 
-import binarySearch from '../util/binary-search'
+import { binarySearch1 } from '../util/binary-search'
 
 //四层循环 时间复杂度 O(n**4)
 export const solution1 = (n: number, m: number, k: number[]): boolean => {
@@ -36,7 +36,7 @@ export const solution2 = (n: number, m: number, k: number[]): boolean => {
   for (let a = 0; a < n; a++) {
     for (let b = 0; b < n; b++) {
       for (let c = 0; c < n; c++) {
-        if (binarySearch(k, m - k[a] - k[b] - k[c])) return true
+        if (binarySearch1(k, m - k[a] - k[b] - k[c])) return true
       }
     }
   }
@@ -58,7 +58,7 @@ export const solution3 = (n: number, m: number, k: number[]): boolean => {
 
   for (let a = 0; a < n; a++) {
     for (let b = 0; b < n; b++) {
-      if (binarySearch(sumOfCAndD, m - k[a] - k[b])) return true
+      if (binarySearch1(sumOfCAndD, m - k[a] - k[b])) return true
     }
   }
 

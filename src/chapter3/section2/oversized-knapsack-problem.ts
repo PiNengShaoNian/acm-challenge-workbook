@@ -12,6 +12,8 @@ export const solution = (
       return
     }
 
+    if (weight > capacity) return
+
     initPermutation1(n + 1, weight, value)
     initPermutation1(n + 1, weight + items[n][0], value + items[n][1])
   }
@@ -31,21 +33,57 @@ export const solution = (
   permutation1.length = m
 
   const lowerBound = (weight: number): number => {
-    let low = 0
-    let hi = permutation1.length
+    if (!permutation1.length) return -1
 
-    while (low < hi) {
-      const mid = low + ((hi - low) >> 1)
+    let lo = 0
+    let hi = permutation1.length - 1
 
-      if (permutation1[mid][0] > weight) {
-        hi = mid
+    while (lo <= hi) {
+      const mid = Math.floor((lo + hi) / 2)
+      if (permutation1[mid][0] === weight) {
+        if (
+          mid + 1 < permutation1.length &&
+          permutation1[mid + 1][0] === weight
+        ) {
+          lo = mid + 1
+        } else {
+          lo = mid
+          break
+        }
+      } else if (permutation1[mid][0] > weight) {
+        hi = mid - 1
       } else {
-        low = mid + 1
+        lo = mid + 1
       }
     }
 
-    return low
+    if (lo >= permutation1.length) {
+      lo = permutation1.length - 1
+    }
+
+    if (lo <= 0 && weight < permutation1[0][0]) lo = -1
+
+    return lo
   }
+
+  ;(function core(n: number, weight: number, value: number) {
+    if (n === items.length) {
+      let index = lowerBound(capacity - weight)
+      if (index === -1) return
+
+      const totalValue = permutation1[index][1] + value
+
+      result = Math.max(result, totalValue)
+
+      return
+    }
+
+    if (weight > capacity) return
+
+    core(n + 1, weight, value)
+    core(n + 1, weight + items[n][0], value + items[n][1])
+  })(items.length >> 1, 0, 0)
 
   return result
 }
+  
